@@ -11,16 +11,27 @@ URL = os.getenv('URL')
 APPID = os.getenv('APPID')
 SENDER_EMAIL = os.getenv('SENDER_EMAIL')
 PASSWORD = os.getenv('PASSWORD')
+SMTP_SERVER = os.getenv('SMTP_SERVER')
+SMTP_PORT = os.getenv('SMTP_PORT')
 
-weather_msg = """
+
+WEATHER_MSG = """
 Hello, Stacy!
 I'm your bot who will inform you about weather :)
 For {dotm}, in {city} I could tell you, that in {time_format} will be {temp:.0f}°C
 Tomorrow will be {weather_info}, so {mesg}
 """
 
+
 def get_celsium(temp_kelvin):
     return temp_kelvin - 273.15
+
+
+def get_message(info):
+    if info == "clear sky":
+        return "you should have a walk this day"
+
+    return "I recommend you to stay home and to do different useful things"
 
 
 def foo():
@@ -36,14 +47,13 @@ def foo():
     dotm = date.strftime('%dth of %B')
     time_format = date.strftime('%H:%M o\'clock')
     weather_info = weather_item["weather"][0]["description"]
-    if weather_info == "clear sky":
-        mesg = "you should have a walk this day"
-    else:
-        mesg = "I recommend you to stay home and to do different useful things"
-
-    body = weather_msg.format(dotm=dotm, weather_info=weather_info, mesg=mesg, time_format=time_format, temp=temp, city=ret["city"]["name"])
     
-    smtp = smtplib.SMTP('smtp.gmail.com', 587)
+    mesg = get_message(weather_info)
+    body = WEATHER_MSG.format(dotm=dotm, weather_info=weather_info,
+                              mesg=mesg, time_format=time_format,
+                              temp=temp, city=ret["city"]["name"])
+
+    smtp = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
     smtp.starttls()
     msg = EmailMessage()
     smtp.login(SENDER_EMAIL, PASSWORD)
