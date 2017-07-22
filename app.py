@@ -5,7 +5,9 @@ import smtplib
 from email.mime.text import MIMEText
 from datetime import datetime, timedelta
 from email.message import EmailMessage
+from flask import Flask
 
+app = Flask(__name__)
 
 URL = os.getenv('URL')
 APPID = os.getenv('APPID')
@@ -65,8 +67,14 @@ def foo():
     msg['To'] = [SENDER_EMAIL]
     msg.set_content(body)
     smtp.send_message(msg)
-    print('e-mail sent.')
     smtp.quit()
 
-if __name__ == "__main__":
+
+@app.route('/')
+def get_weather():
     foo()
+    return ''
+
+
+if __name__ == "__main__":
+    app.run()

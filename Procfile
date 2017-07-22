@@ -1,2 +1,1 @@
-weather: python3 app.py
-
+weather: gunicorn app:app
