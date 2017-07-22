@@ -1,13 +1,12 @@
-#api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}
 import os
 import requests
 import smtplib
 from email.mime.text import MIMEText
 from datetime import datetime, timedelta
 from email.message import EmailMessage
-from flask import Flask
+from apscheduler.schedulers.blocking import BlockingScheduler
 
-app = Flask(__name__)
+sched = BlockingScheduler()
 
 URL = os.getenv('URL')
 APPID = os.getenv('APPID')
@@ -17,7 +16,7 @@ SMTP_SERVER = os.getenv('SMTP_SERVER')
 SMTP_PORT = os.getenv('SMTP_PORT')
 LONGTITUDE = os.getenv('LONGTITUDE')
 LATITUDE = os.getenv('LATITUDE')
-
+UPDATE_INTERVAL = int(os.getenv('UPDATE_INTERVAL', 60))
 
 WEATHER_MSG = """
 Hello, Stacy!
@@ -71,11 +70,9 @@ def foo():
     smtp.quit()
 
 
-@app.route('/')
-def get_weather():
+@sched.scheduled_job('interval', minutes=UPDATE_INTERVAL)
+def timed_job():
     foo()
-    return ''
 
 
-if __name__ == "__main__":
-    app.run()
+sched.start()
