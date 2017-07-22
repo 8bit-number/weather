@@ -46,6 +46,7 @@ def foo():
     resp = requests.get(URL, params=data)
     ret = resp.json()
 
+    weather_item = ret['list'][3]
     temp = get_celsium(weather_item["main"]["temp"])
     date = datetime.strptime(weather_item["dt_txt"], '%Y-%m-%d %H:%M:%S')
     dotm = date.strftime('%dth of %B')
