@@ -2,7 +2,7 @@ import os
 import requests
 import smtplib
 from email.mime.text import MIMEText
-from datetime import datetime, timedelta
+from datetime import datetime
 from email.message import EmailMessage
 from apscheduler.schedulers.blocking import BlockingScheduler
 
@@ -16,12 +16,13 @@ SMTP_SERVER = os.getenv('SMTP_SERVER')
 SMTP_PORT = os.getenv('SMTP_PORT')
 LONGTITUDE = os.getenv('LONGTITUDE')
 LATITUDE = os.getenv('LATITUDE')
-UPDATE_INTERVAL = int(os.getenv('UPDATE_INTERVAL', 60))
+UPDATE_INTERVAL = int(os.getenv('UPDATE_INTERVAL', 6))
 
 WEATHER_MSG = """
 Hello, Stacy!
 I'm your bot who will inform you about weather :)
-For {dotm}, in {city} I could tell you, that in {time_format} will be {temp:.0f}°C
+For {dotm}, in {city}
+I could tell you, that in {time_format} will be {temp:.0f}°C
 Tomorrow will be {weather_info}, so {mesg}
 """
 
@@ -38,8 +39,8 @@ def get_message(info):
 
 
 def foo():
-    data = { "lat": LATITUDE, 
-             "lon": LONGTITUDE, 
+    data = { "lat": LATITUDE,
+             "lon": LONGTITUDE,
              "APPID": APPID}
     
     resp = requests.get(URL, params=data)
@@ -70,7 +71,7 @@ def foo():
     smtp.quit()
 
 
-@sched.scheduled_job('interval', minutes=UPDATE_INTERVAL)
+@sched.scheduled_job('interval', hours=UPDATE_INTERVAL)
 def timed_job():
     foo()
 
