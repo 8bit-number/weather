@@ -16,7 +16,7 @@ SMTP_SERVER = os.getenv('SMTP_SERVER')
 SMTP_PORT = os.getenv('SMTP_PORT')
 LONGTITUDE = os.getenv('LONGTITUDE')
 LATITUDE = os.getenv('LATITUDE')
-UPDATE_INTERVAL = int(os.getenv('UPDATE_INTERVAL', 6))
+UPDATE_INTERVAL = int(os.getenv('UPDATE_INTERVAL', 190))
 
 WEATHER_MSG = """
 Hello, Stacy!
@@ -71,7 +71,7 @@ def foo():
     smtp.quit()
 
 
-@sched.scheduled_job('interval', hours=UPDATE_INTERVAL)
+@sched.scheduled_job('interval', minutes=UPDATE_INTERVAL)
 def timed_job():
     foo()
 
