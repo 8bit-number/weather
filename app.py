@@ -16,7 +16,7 @@ SMTP_SERVER = os.getenv('SMTP_SERVER')
 SMTP_PORT = os.getenv('SMTP_PORT')
 LONGTITUDE = os.getenv('LONGTITUDE')
 LATITUDE = os.getenv('LATITUDE')
-JOB_HOURS = int(os.getenv('JOB_HOURS'))
+JOB_HOURS = os.getenv('JOB_HOURS')
 
 
 WEATHER_MSG = """
