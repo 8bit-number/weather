@@ -23,7 +23,7 @@ WEATHER_MSG = """
 Hello, Stacy!
 I'm your bot who will inform you about weather :)
 For {dotm}, in {city}
-I could tell you, that in {time_format} will be {temp:.0f}°C
+I could tell you that in {time_format} will be {temp:.0f}°C
 Tomorrow will be {weather_info}, so {mesg}
 """
 
