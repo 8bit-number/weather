@@ -1,10 +1,10 @@
 import os
 import requests
 import smtplib
-from email.mime.text import MIMEText
-from datetime import datetime, timedelta
+from datetime import datetime
 from email.message import EmailMessage
 from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.triggers.cron import CronTrigger
 
 sched = BlockingScheduler()
 
@@ -16,12 +16,14 @@ SMTP_SERVER = os.getenv('SMTP_SERVER')
 SMTP_PORT = os.getenv('SMTP_PORT')
 LONGTITUDE = os.getenv('LONGTITUDE')
 LATITUDE = os.getenv('LATITUDE')
-UPDATE_INTERVAL = int(os.getenv('UPDATE_INTERVAL', 60))
+JOB_HOURS = int(os.getenv('JOB_HOURS'))
+
 
 WEATHER_MSG = """
 Hello, Stacy!
 I'm your bot who will inform you about weather :)
-For {dotm}, in {city} I could tell you, that in {time_format} will be {temp:.0f}°C
+For {dotm}, in {city}
+I could tell you, that in {time_format} will be {temp:.0f}°C
 Tomorrow will be {weather_info}, so {mesg}
 """
 
@@ -38,20 +40,20 @@ def get_message(info):
 
 
 def foo():
-    data = { "lat": LATITUDE, 
-             "lon": LONGTITUDE, 
-             "APPID": APPID}
-    
+    data = {"lat": LATITUDE,
+            "lon": LONGTITUDE,
+            "APPID": APPID}
+
     resp = requests.get(URL, params=data)
     ret = resp.json()
 
-    weather_item = ret['list'][3]
+    weather_item = ret['list'][0]
     temp = get_celsium(weather_item["main"]["temp"])
     date = datetime.strptime(weather_item["dt_txt"], '%Y-%m-%d %H:%M:%S')
     dotm = date.strftime('%dth of %B')
     time_format = date.strftime('%H:%M o\'clock')
     weather_info = weather_item["weather"][0]["description"]
-    
+
     mesg = get_message(weather_info)
     body = WEATHER_MSG.format(dotm=dotm, weather_info=weather_info,
                               mesg=mesg, time_format=time_format,
@@ -70,7 +72,7 @@ def foo():
     smtp.quit()
 
 
-@sched.scheduled_job('interval', minutes=UPDATE_INTERVAL)
+@sched.scheduled_job(CronTrigger(hour=JOB_HOURS))
 def timed_job():
     foo()
 
