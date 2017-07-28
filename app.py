@@ -78,5 +78,5 @@ def timed_job():
 
 
 sched.timezone = 'Europe/Kiev'
-now = datetime.now(sched.timezone)
+now = datetime.datetime.now(sched.timezone)
 sched.start()
