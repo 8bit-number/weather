@@ -17,7 +17,7 @@ LONGTITUDE = os.getenv('LONGTITUDE')
 LATITUDE = os.getenv('LATITUDE')
 JOB_HOURS = os.getenv('JOB_HOURS')
 JOB_MINUTES = os.getenv('JOB_MINUTES')
-TIMEZONE = os.getenv('TTMEZONE')
+TIMEZONE = os.getenv('TIMEZONE')
 
 
 WEATHER_MSG = """
