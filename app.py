@@ -1,7 +1,7 @@
 import os
 import requests
 import smtplib
-import datetime
+from datetime import datetime
 import pytz
 from email.message import EmailMessage
 from apscheduler.schedulers.blocking import BlockingScheduler
