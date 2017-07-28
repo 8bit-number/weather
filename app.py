@@ -2,7 +2,6 @@ import os
 import requests
 import smtplib
 import datetime
-import pytz
 from email.message import EmailMessage
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -79,4 +78,5 @@ def timed_job():
 
 
 sched.timezone = 'Europe/Kiev'
+now = datetime.now(sched.timezone)
 sched.start()
