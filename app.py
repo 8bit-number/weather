@@ -2,11 +2,10 @@ import os
 import requests
 import smtplib
 import datetime
+import pytz
 from email.message import EmailMessage
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
-
-sched = BlockingScheduler()
 
 URL = os.getenv('URL')
 APPID = os.getenv('APPID')
@@ -20,6 +19,7 @@ JOB_HOURS = os.getenv('JOB_HOURS')
 JOB_MINUTES = os.getenv('JOB_MINUTES')
 TIMEZONE = os.getenv('TTMEZONE')
 
+
 WEATHER_MSG = """
 Hello, Stacy!
 I'm your bot who will inform you about weather :)
@@ -27,6 +27,8 @@ For {dotm}, in {city}
 I could tell you that in {time_format} will be {temp:.0f}°C
 Tomorrow will be {weather_info}, so {mesg}
 """
+
+sched = BlockingScheduler(timezone=pytz.timezone(TIMEZONE))
 
 
 def get_celsium(temp_kelvin):
@@ -73,8 +75,7 @@ def foo():
     smtp.quit()
 
 
-@sched.scheduled_job(CronTrigger(hour=JOB_HOURS,
-                                 minute=JOB_MINUTES, timezone=TIMEZONE))
+@sched.scheduled_job(CronTrigger(hour=JOB_HOURS, minute=JOB_MINUTES))
 def timed_job():
     foo()
 
