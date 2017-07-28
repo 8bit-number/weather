@@ -2,11 +2,12 @@ import os
 import requests
 import smtplib
 import datetime
+import pytz
 from email.message import EmailMessage
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-sched = BlockingScheduler(timezone='Europe/Kiev')
+sched = BlockingScheduler()
 
 URL = os.getenv('URL')
 APPID = os.getenv('APPID')
@@ -76,4 +77,6 @@ def foo():
 def timed_job():
     foo()
 
-sched.start()
+
+sched.timezone = 'Europe/Kiev'
+d.start()
