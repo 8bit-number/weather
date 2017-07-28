@@ -18,6 +18,7 @@ LONGTITUDE = os.getenv('LONGTITUDE')
 LATITUDE = os.getenv('LATITUDE')
 JOB_HOURS = os.getenv('JOB_HOURS')
 JOB_MINUTES = os.getenv('JOB_MINUTES')
+TIMEZONE = os.getenv('TTMEZONE')
 
 WEATHER_MSG = """
 Hello, Stacy!
@@ -72,9 +73,10 @@ def foo():
     smtp.quit()
 
 
-@sched.scheduled_job(CronTrigger(hour=JOB_HOURS, minute=JOB_MINUTES))
+@sched.scheduled_job(CronTrigger(hour=JOB_HOURS,
+                                 minute=JOB_MINUTES, timezone=TIMEZONE))
 def timed_job():
     foo()
 
 
-sched.start(timezone='Europe/Kiev')
+sched.start()
