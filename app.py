@@ -1,12 +1,12 @@
 import os
 import requests
 import smtplib
-from datetime import datetime
+import datetime
 from email.message import EmailMessage
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-sched = BlockingScheduler()
+sched = BlockingScheduler(timezone='Europe/Kiev')
 
 URL = os.getenv('URL')
 APPID = os.getenv('APPID')
@@ -75,6 +75,5 @@ def foo():
 @sched.scheduled_job(CronTrigger(hour=JOB_HOURS, minute=JOB_MINUTES))
 def timed_job():
     foo()
-
 
 sched.start()
