@@ -42,16 +42,17 @@ def foo():
     ret = resp.json()
 
     weather_items = ret['list'][0:5]
-    summary = '{city} weather summary\n'
+    summary = '{city} weather summary\n'.format(city=ret["city"]["name"])
 
     for item in weather_items:
         temp = get_celsium(item["main"]["temp"])
         date = datetime.strptime(item["dt_txt"], '%Y-%m-%d %H:%M:%S')
         time_format = date.strftime('%H:%M o\'clock')
         weather_info = item["weather"][0]["description"]
-        summary += '{time_format}:{temp:.1f} ({weather_info})\n'.format(
-            weather_info=weather_info, time_format=time_format,
-            temp=temp, city=ret["city"]["name"])
+        summary += '{time_format} : {temp:.1f} ({weather_info})\n'.format(
+            weather_info=weather_info,
+            time_format=time_format,
+            temp=temp)
 
     smtp = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
     smtp.starttls()
