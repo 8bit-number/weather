@@ -18,6 +18,8 @@ LATITUDE = os.getenv('LATITUDE')
 JOB_HOURS = os.getenv('JOB_HOURS')
 JOB_MINUTES = os.getenv('JOB_MINUTES')
 TZ = os.getenv('TZ')
+LEVEL_INFO = int(os.getenv('LEVEL_INFO', 1))
+LOCAL_TZ = pytz.timezone(TZ)
 
 sched = BlockingScheduler(timezone=pytz.timezone(TZ))
 
@@ -33,6 +35,10 @@ def get_message(info):
     return "I recommend you to stay home and to do different useful things"
 
 
+def get_localized_dt(utc_dt):
+    return utc_dt.replace(tzinfo=pytz.utc).astimezone(LOCAL_TZ)
+
+
 def foo():
     data = {"lat": LATITUDE,
             "lon": LONGTITUDE,
@@ -41,13 +47,14 @@ def foo():
     resp = requests.get(URL, params=data)
     ret = resp.json()
 
-    weather_items = ret['list'][0:5]
+    weather_items = ret['list'][:LEVEL_INFO]
     summary = '{city} weather summary\n'.format(city=ret["city"]["name"])
 
     for item in weather_items:
         temp = get_celsium(item["main"]["temp"])
         date = datetime.strptime(item["dt_txt"], '%Y-%m-%d %H:%M:%S')
-        time_format = date.strftime('%H:%M o\'clock')
+        local_dt = get_localized_dt(date)
+        time_format = local_dt.strftime('%H:%M o\'clock')
         weather_info = item["weather"][0]["description"]
         summary += '{time_format} : {temp:.1f} ({weather_info})\n'.format(
             weather_info=weather_info,
