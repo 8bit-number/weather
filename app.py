@@ -7,6 +7,7 @@ from email.message import EmailMessage
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 
+PROJECT_NAME = "WEATHER DISTRIBUTION"
 URL = os.getenv('URL')
 APPID = os.getenv('APPID')
 SENDER_EMAIL = os.getenv('SENDER_EMAIL')
@@ -66,7 +67,7 @@ def foo():
     msg = EmailMessage()
     smtp.login(SENDER_EMAIL, PASSWORD)
 
-    msg['Subject'] = "WEATHER DISTRIBUTION"
+    msg['Subject'] = PROJECT_NAME
     msg['From'] = SENDER_EMAIL
     msg['To'] = [SENDER_EMAIL]
     msg.set_content(summary)
