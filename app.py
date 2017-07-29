@@ -52,7 +52,7 @@ def foo():
     ret = resp.json()
 
     weather_item = ret['list'][0:5]
-    temp = get_celsium(weather_item["main"]["temp"])
+    temp = get_celsium(weather_item["main"][0])
     date = datetime.strptime(weather_item["dt_txt"], '%Y-%m-%d %H:%M:%S')
     # dotm = date.strftime('%dth of %B')
     time_format = date.strftime('%H:%M o\'clock')
