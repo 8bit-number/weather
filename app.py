@@ -42,20 +42,18 @@ def foo():
     ret = resp.json()
 
     weather_items = ret['list'][0:5]
-    summary = ''
+    summary = '{city} weather summary'
 
     for item in weather_items:
         temp = get_celsium(item["main"]["temp"])
         date = datetime.strptime(item["dt_txt"], '%Y-%m-%d %H:%M:%S')
-        # day_of_the_month = date.strftime('%dth of %B')
         time_format = date.strftime('%H:%M o\'clock')
         weather_info = item["weather"][0]["description"]
-        summary += 'in {city} at {time_format} : {temp:.1f} ({weather_info})\n'
-
-    # mesg = get_message(weather_info)
-    body = summary.format(weather_info=weather_info,
-                          time_format=time_format,
-                          temp=temp, city=ret["city"]["name"])
+        summary += '{time_format}:'
+        '{temp:.1f} ({weather_info})\n'.format(weather_info=weather_info,
+                                               time_format=time_format,
+                                               temp=temp,
+                                               city=ret["city"]["name"])
 
     smtp = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
     smtp.starttls()
@@ -65,7 +63,7 @@ def foo():
     msg['Subject'] = "WEATHER DISTRIBUTION"
     msg['From'] = SENDER_EMAIL
     msg['To'] = [SENDER_EMAIL]
-    msg.set_content(body)
+    msg.set_content(summary)
     smtp.send_message(msg)
     smtp.quit()
 
