@@ -17,17 +17,9 @@ LONGTITUDE = os.getenv('LONGTITUDE')
 LATITUDE = os.getenv('LATITUDE')
 JOB_HOURS = os.getenv('JOB_HOURS')
 JOB_MINUTES = os.getenv('JOB_MINUTES')
-TIMEZONE = os.getenv('TIMEZONE')
+TZ = os.getenv('TZ')
 
-
-WEATHER_MSG = """
-Hello, Stacy!
-in {time_format} will be {temp:.0f} and {weather_info}
-in {time_format} will be {temp:.0f} and {weather_info}
-in {time_format} will be {temp:.0f} and {weather_info}
-"""
-
-sched = BlockingScheduler(timezone=pytz.timezone(TIMEZONE))
+sched = BlockingScheduler(timezone=pytz.timezone(TZ))
 
 
 def get_celsium(temp_kelvin):
@@ -49,17 +41,22 @@ def foo():
     resp = requests.get(URL, params=data)
     ret = resp.json()
 
-    weather_item = ret['list'][0:3]
-    temp = get_celsium(weather_item["main"][0])
-    date = datetime.strptime(weather_item["dt_txt"], '%Y-%m-%d %H:%M:%S')
-    # dotm = date.strftime('%dth of %B')
-    time_format = date.strftime('%H:%M o\'clock')
-    weather_info = weather_item["weather"][0]["description"]
+    weather_items = ret['list'][0:5]
+    summary = ' '
+
+    for item in weather_items:
+        weather_items = ret['list'][0:5]
+        temp = get_celsium(weather_items["main"]["temp"])
+        date = datetime.strptime(weather_items["dt_txt"], '%Y-%m-%d %H:%M:%S')
+        # day_of_the_month = date.strftime('%dth of %B')
+        time_format = date.strftime('%H:%M o\'clock')
+        weather_info = weather_items["weather"][0]["description"]
+        summary += 'in {city} at {time_format} : {temp:.1f} ({weather_info})\n'
 
     # mesg = get_message(weather_info)
-    body = WEATHER_MSG.format(weather_info=weather_info,
-                              time_format=time_format,
-                              temp=temp)
+    body = summary.format(weather_info=weather_info,
+                          time_format=time_format,
+                          temp=temp, city=ret["city"]["name"])
 
     smtp = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
     smtp.starttls()
