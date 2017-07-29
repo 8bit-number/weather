@@ -46,11 +46,11 @@ def foo():
 
     for item in weather_items:
         weather_items = ret['list'][0:5]
-        temp = get_celsium(weather_items["main"]["temp"])
-        date = datetime.strptime(weather_items["dt_txt"], '%Y-%m-%d %H:%M:%S')
+        temp = get_celsium(item["main"]["temp"])
+        date = datetime.strptime(item["dt_txt"], '%Y-%m-%d %H:%M:%S')
         # day_of_the_month = date.strftime('%dth of %B')
         time_format = date.strftime('%H:%M o\'clock')
-        weather_info = weather_items["weather"][0]["description"]
+        weather_info = item["weather"][0]["description"]
         summary += 'in {city} at {time_format} : {temp:.1f} ({weather_info})\n'
 
     # mesg = get_message(weather_info)
