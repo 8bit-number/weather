@@ -42,10 +42,9 @@ def foo():
     ret = resp.json()
 
     weather_items = ret['list'][0:5]
-    summary = ' '
+    summary = ''
 
     for item in weather_items:
-        weather_items = ret['list'][0:5]
         temp = get_celsium(item["main"]["temp"])
         date = datetime.strptime(item["dt_txt"], '%Y-%m-%d %H:%M:%S')
         # day_of_the_month = date.strftime('%dth of %B')
