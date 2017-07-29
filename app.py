@@ -25,8 +25,6 @@ Hello, Stacy!
 in {time_format} will be {temp:.0f} and {weather_info}
 in {time_format} will be {temp:.0f} and {weather_info}
 in {time_format} will be {temp:.0f} and {weather_info}
-in {time_format} will be {temp:.0f} and {weather_info}
-in {time_format} will be {temp:.0f} and {weather_info}
 """
 
 sched = BlockingScheduler(timezone=pytz.timezone(TIMEZONE))
@@ -51,7 +49,7 @@ def foo():
     resp = requests.get(URL, params=data)
     ret = resp.json()
 
-    weather_item = ret['list'][0:5]
+    weather_item = ret['list'][0:3]
     temp = get_celsium(weather_item["main"][0])
     date = datetime.strptime(weather_item["dt_txt"], '%Y-%m-%d %H:%M:%S')
     # dotm = date.strftime('%dth of %B')
