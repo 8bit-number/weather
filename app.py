@@ -22,10 +22,11 @@ TIMEZONE = os.getenv('TIMEZONE')
 
 WEATHER_MSG = """
 Hello, Stacy!
-I'm your bot who will inform you about weather :)
-For {dotm}, in {city}
-I could tell you that in {time_format} will be {temp:.0f}°C
-Tomorrow will be {weather_info}, so {mesg}
+in {time_format} will be {temp:.0f} and {weather_info}
+in {time_format} will be {temp:.0f} and {weather_info}
+in {time_format} will be {temp:.0f} and {weather_info}
+in {time_format} will be {temp:.0f} and {weather_info}
+in {time_format} will be {temp:.0f} and {weather_info}
 """
 
 sched = BlockingScheduler(timezone=pytz.timezone(TIMEZONE))
@@ -50,17 +51,17 @@ def foo():
     resp = requests.get(URL, params=data)
     ret = resp.json()
 
-    weather_item = ret['list'][0]
+    weather_item = ret['list'][0:5]
     temp = get_celsium(weather_item["main"]["temp"])
     date = datetime.strptime(weather_item["dt_txt"], '%Y-%m-%d %H:%M:%S')
-    dotm = date.strftime('%dth of %B')
+    # dotm = date.strftime('%dth of %B')
     time_format = date.strftime('%H:%M o\'clock')
     weather_info = weather_item["weather"][0]["description"]
 
-    mesg = get_message(weather_info)
-    body = WEATHER_MSG.format(dotm=dotm, weather_info=weather_info,
-                              mesg=mesg, time_format=time_format,
-                              temp=temp, city=ret["city"]["name"])
+    # mesg = get_message(weather_info)
+    body = WEATHER_MSG.format(weather_info=weather_info,
+                              time_format=time_format,
+                              temp=temp)
 
     smtp = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
     smtp.starttls()
